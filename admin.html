@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>URBAN.SNEAKERLAB — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a0c;--panel:#12161b;--panel2:#171b21;--text:#f7f7f7;--muted:#969da7;--pink:#ff00d4;--lime:#d7ff00;--line:#2a3038}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.app{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
+aside{border-right:1px solid var(--line);padding:25px 18px;background:#0a0c0f}.logo{font-size:20px;font-weight:900;line-height:.8;margin:8px 10px 35px}.logo span{display:block;color:var(--pink);font:17px "Permanent Marker";margin-top:5px}.menu button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#dfe2e6;padding:13px 14px;border-radius:10px;margin:3px 0;font-weight:700;cursor:pointer}.menu button.active,.menu button:hover{background:#20252d;color:var(--lime)}.main{padding:30px 4vw;max-width:1400px;width:100%}.top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}.top h1{margin:0;font-size:30px}.back{color:#fff;text-decoration:none;border:1px solid #414752;padding:10px 15px;border-radius:10px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}.card small{color:var(--muted)}.value{font-size:27px;font-weight:900;margin-top:7px}.green{color:var(--lime)}.pink{color:var(--pink)}.section{margin-top:25px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:20px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.section h2{font-size:19px;margin:0}.btn{border:0;background:var(--lime);color:#070807;padding:10px 15px;border-radius:9px;font-weight:900;cursor:pointer}.btn.pinkbtn{background:var(--pink);color:white}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-size:11px;text-transform:uppercase}.status{padding:5px 9px;border-radius:20px;background:#1c2a1d;color:var(--lime);font-weight:800;font-size:11px}.status.low{background:#33280e;color:#ffd23d}.actions button{background:#222831;border:0;color:#fff;padding:7px 9px;border-radius:7px;cursor:pointer}.actions button:hover{background:var(--pink)}.modal{display:none;position:fixed;inset:0;background:#000c;z-index:10;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.box{width:min(620px,100%);background:#11151a;border:1px solid #363c45;border-radius:16px;padding:23px}.box h2{margin-top:0}.field{width:100%;padding:11px;background:#0b0e12;color:#fff;border:1px solid #3a414b;border-radius:8px;margin:5px 0 11px;outline:none}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modalactions{display:flex;justify-content:flex-end;gap:9px}.cancel{background:#272c34;color:white;border:0;padding:10px 15px;border-radius:9px;cursor:pointer}.empty{color:var(--muted);padding:25px 0;text-align:center}
+@media(max-width:850px){.app{grid-template-columns:1fr}aside{position:static;border-right:0;border-bottom:1px solid var(--line)}.menu{display:flex;overflow:auto}.menu button{min-width:max-content}.cards{grid-template-columns:1fr 1fr}}@media(max-width:500px){.cards{grid-template-columns:1fr}.row{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+.admin-shell,.dashboard,.admin-dashboard,.old-admin{display:none!important}\n</style>
+<style>
+.adminGate{max-width:560px;margin:70px auto;padding:28px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:#111}
+.adminGate input,.adminGate select,.adminGate textarea{width:100%;box-sizing:border-box;margin:8px 0;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#181818;color:#fff}
+.adminGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.adminCard{padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:#121212}
+.adminCard img{width:100%;height:180px;object-fit:cover;border-radius:12px;background:#222}
+.adminActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.adminActions button{cursor:pointer}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;background:#262626}
+.hidden{display:none!important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<div id="adminGate" class="adminGate">
+  <h1>URBAN.SNEAKERLAB — ADMIN</h1>
+  <p id="gateMessage">Inicia sessão com a tua conta de administrador.</p>
+  <input id="adminEmail" type="email" placeholder="Email">
+  <input id="adminPassword" type="password" placeholder="Palavra-passe">
+  <button onclick="loginAdmin()">ENTRAR</button>
+</div>
+
+<div id="adminApp" class="hidden" style="max-width:1200px;margin:30px auto;padding:20px">
+  <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div><h1>URBAN.SNEAKERLAB</h1><p>Admin · <span id="adminUser"></span></p></div>
+    <div class="adminActions"><button onclick="openNew()">+ Novo produto</button><button onclick="logoutAdmin()">Sair</button></div>
+  </header>
+  <div class="adminGrid" style="margin:20px 0">
+    <div class="adminCard"><b>Produtos</b><div id="productCount" style="font-size:32px">0</div></div>
+    <div class="adminCard"><b>Encomendas</b><div id="orderCount" style="font-size:32px">0</div></div>
+  </div>
+
+  <section id="editor" class="adminCard hidden" style="margin-bottom:20px">
+    <h2>Produto</h2>
+    <div class="adminGrid">
+      <div><label>Nome</label><input id="pName" class="field"></div>
+      <div><label>Slug</label><input id="pSlug" class="field"></div>
+      <div><label>Marca</label><select id="pBrand" class="field"></select></div>
+      <div><label>Preço (€)</label><input id="pPrice" type="number" step="0.01" class="field"></div>
+      <div><label>Preço anterior (€)</label><input id="pCompare" type="number" step="0.01" class="field"></div>
+      <div><label>Cor</label><input id="pColor" class="field"></div>
+      <div><label>Imagem URL</label><input id="pImage" class="field"></div>
+    </div>
+    <label>Tamanhos e stock — exemplo: <b>36:5, 37:8, 38:3</b></label>
+    <input id="pSizes" class="field">
+    <p><label><input id="pActive" type="checkbox"> Ativo</label> <label><input id="pFeatured" type="checkbox"> Destaque</label></p>
+    <div class="adminActions"><button onclick="saveProduct()">Guardar</button><button onclick="closeEditor()">Cancelar</button></div>
+  </section>
+
+  <h2>Produtos</h2>
+  <div id="productGrid" class="adminGrid"></div>
+  <h2 style="margin-top:35px">Encomendas</h2>
+  <div id="orders" class="adminGrid"></div>
+</div>
+
+<div class="app">
+<aside>
+<div class="logo">URBAN.<span>SNEAKERLAB</span></div>
+<div class="menu">
+<button class="active">📊 Dashboard</button>
+<button onclick="document.getElementById('productsSection').scrollIntoView()">👟 Produtos</button>
+<button onclick="document.getElementById('ordersSection').scrollIntoView()">📦 Encomendas</button>
+<button onclick="toast('Gestão de clientes preparada para a próxima integração.')">👤 Clientes</button>
+<button onclick="toast('Definições preparadas para a próxima integração.')">⚙️ Definições</button>
+</div>
+</aside>
+<main class="main">
+<div class="top"><div><h1>Dashboard</h1><p style="color:var(--muted);margin:6px 0">Bem-vindo ao painel da URBAN.SNEAKERLAB.</p></div><a class="back" href="index.html">← Ver loja</a></div>
+<div class="cards">
+<div class="card"><small>VENDAS</small><div class="value">€8.420</div><small class="green">↑ 12,4% este mês</small></div>
+<div class="card"><small>ENCOMENDAS</small><div class="value">86</div><small class="green">↑ 8,1%</small></div>
+<div class="card"><small>PRODUTOS</small><div id="productCount" class="value">10</div><small>Ativos na loja</small></div>
+<div class="card"><small>STOCK BAIXO</small><div id="lowCount" class="value pink">2</div><small>Precisam atenção</small></div>
+</div>
+
+<div id="productsSection" class="section">
+<div class="sectionhead"><h2>Gestão de produtos</h2><button class="btn" onclick="openAdd()">+ ADICIONAR PRODUTO</button></div>
+<div class="tablewrap"><table><thead><tr><th>Produto</th><th>Marca</th><th>Preço</th><th>Stock</th><th>Tamanhos</th><th>Status</th><th>Ações</th></tr></thead><tbody id="rows"></tbody></table></div>
+</div>
+
+<div class="section"><div class="sectionhead"><h2>Promoção ativa</h2><button class="btn pinkbtn" onclick="toast('Promoção atualizada.')">EDITAR</button></div>
+<div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap"><div style="font-size:30px">🔥</div><div><b>NEW SEASON — ATÉ 30% OFF</b><br><small style="color:var(--muted)">Aplicada a 24 produtos selecionados · válida até 30/11/2026</small></div></div>
+</div>
+
+<div class="section" id="ordersSection"><div class="sectionhead"><h2>📦 Encomendas</h2><button class="btn" onclick="renderOrders()">ATUALIZAR</button></div>
+<div class="tablewrap"><table><thead><tr><th>ID</th><th>Cliente</th><th>Data</th><th>Itens</th><th>Total</th><th>Estado</th><th>Ação</th></tr></thead><tbody id="orderRows"></tbody></table></div></div>
+</main>
+</div>
+
+<div id="modal" class="modal"><div class="box"><h2 id="modalTitle">Adicionar produto</h2>
+<label>Nome do produto</label><input id="name" class="field" placeholder="Ex.: Air Jordan 4 Retro">
+<div class="row"><div><label>Marca</label><input id="brand" class="field" placeholder="Nike"></div><div><label>Preço (€)</label><input id="price" class="field" type="number" step="0.01" placeholder="149.99"></div></div>
+<div class="row"><div><label>Stock</label><input id="stock" class="field" type="number" placeholder="10"></div><div><label>Tamanhos</label><input id="sizes" class="field" placeholder="40,41,42,43"></div></div>
+<label>Cor</label><input id="color" class="field" placeholder="Black / White">
+<div class="modalactions"><button class="cancel" onclick="closeModal()">Cancelar</button><button class="btn" onclick="saveProduct()">GUARDAR PRODUTO</button></div></div></div>
+<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translate(-50%,80px);background:white;color:#111;padding:12px 17px;border-radius:10px;font-weight:900;transition:.2s;z-index:20"></div>
+
+<script>
+let products=[
+["Air Force 1 ’07","Nike",119.99,18,"38,39,40,41,42,43,44","White"],
+["Air Jordan 1 Retro High OG","Jordan",189.99,7,"39,40,41,42,43,44","Chicago"],
+["Campus 00s","adidas",109.99,14,"38,39,40,41,42,43","Core Black"],
+["550","New Balance",129.99,4,"39,40,41,42,43,44,45","White/Grey"],
+["Suede XL","Puma",99.99,21,"38,39,40,41,42,43","Green/White"],
+["Dunk Low","Nike",129.99,11,"38,39,40,41,42,43,44","Black/White"],
+["Air Max 1","Nike",149.99,8,"39,40,41,42,43,44","Blue"],
+["2002R","New Balance",159.99,3,"40,41,42,43,44,45","Rain Cloud"],
+["Forum Low","adidas",114.99,16,"38,39,40,41,42,43","White/Green"],
+["Old Skool","Vans",84.99,27,"38,39,40,41,42,43,44","Black/White"]
+];
+function persistProducts(){localStorage.setItem("usl_products_v1",JSON.stringify(products))}
+function render(){document.getElementById('rows').innerHTML=products.map((p,i)=>`<tr><td><b>${p[0]}</b><br><small style="color:var(--muted)">${p[5]}</small></td><td>${p[1]}</td><td>€${p[2].toFixed(2).replace('.',',')}</td><td>${p[3]}</td><td>${p[4]}</td><td><span class="status ${p[3]<=5?'low':''}">${p[3]<=5?'Stock baixo':'Ativo'}</span></td><td class="actions"><button onclick="editProduct(${i})">Editar</button> <button onclick="deleteProduct(${i})">Eliminar</button></td></tr>`).join('');document.getElementById('productCount').textContent=products.length;document.getElementById('lowCount').textContent=products.filter(p=>p[3]<=5).length}
+let editIndex=null;
+function openAdd(){editIndex=null;document.getElementById('modalTitle').textContent='Adicionar produto';['name','brand','price','stock','sizes','color'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal').classList.add('open')}
+function editProduct(i){editIndex=i;let p=products[i];document.getElementById('modalTitle').textContent='Editar produto';['name','brand','price','stock','sizes','color'].forEach((id,j)=>document.getElementById(id).value=p[[0,1,2,3,4,5][j]]);document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function saveProduct(){let p=[document.getElementById('name').value,document.getElementById('brand').value,Number(document.getElementById('price').value),Number(document.getElementById('stock').value),document.getElementById('sizes').value,document.getElementById('color').value];if(!p[0]||!p[1]||!p[2])return toast('Preenche nome, marca e preço.');if(editIndex===null)products.push(p);else products[editIndex]=p;persistProducts();closeModal();render();toast('Produto guardado ✓')}
+function deleteProduct(i){if(confirm('Eliminar '+products[i][0]+'?')){products.splice(i,1);persistProducts();render();toast('Produto eliminado.')}}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.transform='translate(-50%,0)';setTimeout(()=>x.style.transform='translate(-50%,80px)',1800)}
+render();
+
+function getOrders(){return JSON.parse(localStorage.getItem('usl_orders_v1')||'[]')}
+function saveOrders(o){localStorage.setItem('usl_orders_v1',JSON.stringify(o))}
+function renderOrders(){const o=getOrders(),rows=document.getElementById('orderRows');rows.innerHTML=o.length?o.map((x,i)=>`<tr><td><b>${x.id}</b></td><td>${x.email}</td><td>${x.date}</td><td>${x.items.length}</td><td>€${x.total.toFixed(2).replace('.',',')}</td><td><span class="status">${x.status}</span></td><td class="actions"><button onclick="advanceOrder(${i})">Avançar estado</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Ainda não existem encomendas.</td></tr>'}
+function advanceOrder(i){const o=getOrders(),states=['Pagamento pendente','Pago','Em preparação','Enviado','Entregue'],n=states.indexOf(o[i].status);o[i].status=states[Math.min(n+1,states.length-1)];saveOrders(o);renderOrders();toast('Estado atualizado ✓')}
+renderOrders();
+</script>
+
+<script>
+const cfg = window.URBAN_CONFIG || {};
+const sb = (cfg.SUPABASE_URL && cfg.SUPABASE_PUBLISHABLE_KEY && window.supabase)
+  ? window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_PUBLISHABLE_KEY)
+  : null;
+
+const money = c => (Number(c||0)/100).toLocaleString('pt-PT',{style:'currency',currency:'EUR'});
+let brands = [], products = [], editingId = null;
+
+document.addEventListener('DOMContentLoaded', initAdmin);
+
+async function initAdmin(){
+  if(!sb){
+    showGate('Supabase não configurado. Confirma que config.js está na mesma pasta.');
+    return;
+  }
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session){ showGate(); return; }
+  const {data:profile,error} = await sb.from('profiles').select('full_name,role').eq('id',session.user.id).single();
+  if(error || profile?.role !== 'admin'){
+    showGate('Esta conta não é administradora. Cria/usa uma conta e atribui role = admin no Supabase.');
+    return;
+  }
+  document.getElementById('adminGate')?.classList.add('hidden');
+  document.getElementById('adminApp')?.classList.remove('hidden');
+  document.getElementById('adminUser').textContent = profile.full_name || session.user.email;
+  await loadAll();
+}
+
+function showGate(msg){
+  const gate=document.getElementById('adminGate');
+  if(gate){
+    gate.classList.remove('hidden');
+    document.getElementById('gateMessage').textContent=msg||'Inicia sessão com a tua conta de administrador.';
+  }
+  document.getElementById('adminApp')?.classList.add('hidden');
+}
+
+async function loginAdmin(){
+  const email=document.getElementById('adminEmail').value.trim();
+  const password=document.getElementById('adminPassword').value;
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){document.getElementById('gateMessage').textContent=error.message;return;}
+  location.reload();
+}
+
+async function logoutAdmin(){ await sb.auth.signOut(); location.reload(); }
+
+async function loadAll(){
+  const [b,p,o] = await Promise.all([
+    sb.from('brands').select('id,name').order('name'),
+    sb.from('products').select('id,name,slug,brand_id,price_cents,compare_at_cents,color,image_url,active,featured,brands(name),product_sizes(id,size,stock)').order('created_at',{ascending:false}),
+    sb.from('orders').select('id,email,status,total_cents,created_at').order('created_at',{ascending:false})
+  ]);
+  if(b.error||p.error||o.error){alert((b.error||p.error||o.error).message);return;}
+  brands=b.data||[];products=p.data||[];
+  renderProducts();
+  renderOrders(o.data||[]);
+  document.getElementById('productCount').textContent=products.length;
+  document.getElementById('orderCount').textContent=(o.data||[]).length;
+}
+
+function renderProducts(){
+  const el=document.getElementById('productGrid');
+  el.innerHTML=products.map(p=>{
+    const sizes=(p.product_sizes||[]).map(s=>`${s.size}:${s.stock}`).join(' · ');
+    return `<div class="adminCard">
+      ${p.image_url?`<img src="${escapeAttr(p.image_url)}" alt="">`:`<div style="height:180px;display:grid;place-items:center;font-size:70px;background:#222;border-radius:12px">👟</div>`}
+      <h3>${escapeHtml(p.name)}</h3>
+      <div class="badge">${escapeHtml(p.brands?.name||'Sem marca')}</div>
+      <p>${money(p.price_cents)} · ${escapeHtml(p.color||'')}</p>
+      <p><small>${escapeHtml(sizes||'Sem tamanhos')}</small></p>
+      <div class="adminActions">
+        <button onclick="editProduct('${p.id}')">Editar</button>
+        <button onclick="toggleProduct('${p.id}',${!p.active})">${p.active?'Desativar':'Ativar'}</button>
+      </div>
+    </div>`;
+  }).join('') || '<p>Nenhum produto.</p>';
+}
+
+function renderOrders(orders){
+  const el=document.getElementById('orders');
+  el.innerHTML=orders.map(o=>`<div class="adminCard">
+    <b>#${String(o.id).slice(0,8)}</b>
+    <p>${escapeHtml(o.email)} · ${money(o.total_cents)}</p>
+    <small>${new Date(o.created_at).toLocaleString('pt-PT')}</small>
+    <select onchange="setOrderStatus('${o.id}',this.value)">
+      ${['pending_payment','paid','processing','shipped','delivered','cancelled'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}
+    </select>
+  </div>`).join('') || '<p>Nenhuma encomenda.</p>';
+}
+
+function openNew(){editingId=null;fillForm({name:'',slug:'',brand_id:brands[0]?.id||'',price_cents:0,compare_at_cents:0,color:'',image_url:'',active:true,featured:false,product_sizes:[]});document.getElementById('editor').classList.remove('hidden');}
+function editProduct(id){editingId=id;fillForm(products.find(p=>p.id===id));document.getElementById('editor').classList.remove('hidden');}
+function closeEditor(){document.getElementById('editor').classList.add('hidden');}
+
+function fillForm(p){
+  document.getElementById('pName').value=p.name||'';
+  document.getElementById('pSlug').value=p.slug||'';
+  document.getElementById('pBrand').innerHTML=brands.map(b=>`<option value="${b.id}" ${b.id===p.brand_id?'selected':''}>${escapeHtml(b.name)}</option>`).join('');
+  document.getElementById('pPrice').value=((p.price_cents||0)/100).toFixed(2);
+  document.getElementById('pCompare').value=((p.compare_at_cents||0)/100).toFixed(2);
+  document.getElementById('pColor').value=p.color||'';
+  document.getElementById('pImage').value=p.image_url||'';
+  document.getElementById('pActive').checked=p.active!==false;
+  document.getElementById('pFeatured').checked=!!p.featured;
+  document.getElementById('pSizes').value=(p.product_sizes||[]).map(s=>`${s.size}:${s.stock}`).join(', ');
+}
+
+async function saveProduct(){
+  const name=document.getElementById('pName').value.trim();
+  const slug=document.getElementById('pSlug').value.trim();
+  if(!name||!slug)return alert('Nome e slug são obrigatórios.');
+  const payload={
+    name,slug,brand_id:document.getElementById('pBrand').value,
+    price_cents:Math.round(Number(document.getElementById('pPrice').value||0)*100),
+    compare_at_cents:Math.round(Number(document.getElementById('pCompare').value||0)*100),
+    color:document.getElementById('pColor').value.trim(),
+    image_url:document.getElementById('pImage').value.trim(),
+    active:document.getElementById('pActive').checked,
+    featured:document.getElementById('pFeatured').checked
+  };
+  let id=editingId;
+  let res;
+  if(id) res=await sb.from('products').update(payload).eq('id',id).select().single();
+  else {res=await sb.from('products').insert(payload).select().single();id=res.data?.id;}
+  if(res.error){alert(res.error.message);return;}
+  const raw=document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean);
+  const sizes=raw.map(x=>{const [size,stock]=x.split(':');return {product_id:id,size:(size||'').trim(),stock:Number(stock||0)};}).filter(x=>x.size);
+  if(editingId) await sb.from('product_sizes').delete().eq('product_id',id);
+  if(sizes.length){
+    const sr=await sb.from('product_sizes').upsert(sizes,{onConflict:'product_id,size'});
+    if(sr.error){alert(sr.error.message);return;}
+  }
+  closeEditor();await loadAll();
+}
+
+async function toggleProduct(id,active){
+  const {error}=await sb.from('products').update({active}).eq('id',id);
+  if(error)alert(error.message); else loadAll();
+}
+
+async function setOrderStatus(id,status){
+  const {error}=await sb.from('orders').update({status,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error)alert(error.message); else loadAll();
+}
+
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function escapeAttr(s){return escapeHtml(s);}
+</script>
+</body>
+</html>
