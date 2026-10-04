@@ -1,0 +1,98 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "brand": "Nike",
+      "name": "Air Force 1 ’07",
+      "slug": "air-force-1-07",
+      "price": 119.99,
+      "stock": 18,
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "color": "White",
+      "active": true
+    },
+    {
+      "id": "p2",
+      "brand": "Jordan",
+      "name": "Air Jordan 1 Retro High OG",
+      "slug": "air-jordan-1-retro-high-og",
+      "price": 189.99,
+      "stock": 7,
+      "sizes": [
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "color": "Chicago",
+      "active": true
+    },
+    {
+      "id": "p3",
+      "brand": "adidas",
+      "name": "Campus 00s",
+      "slug": "campus-00s",
+      "price": 109.99,
+      "stock": 14,
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43"
+      ],
+      "color": "Core Black",
+      "active": true
+    },
+    {
+      "id": "p4",
+      "brand": "New Balance",
+      "name": "550",
+      "slug": "new-balance-550",
+      "price": 129.99,
+      "stock": 4,
+      "sizes": [
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45"
+      ],
+      "color": "White/Grey",
+      "active": true
+    },
+    {
+      "id": "p5",
+      "brand": "Puma",
+      "name": "Suede XL",
+      "slug": "puma-suede-xl",
+      "price": 99.99,
+      "stock": 21,
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43"
+      ],
+      "color": "Green/White",
+      "active": true
+    }
+  ],
+  "users": [],
+  "orders": []
+}

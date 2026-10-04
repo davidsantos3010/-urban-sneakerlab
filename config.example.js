@@ -1,0 +1,5 @@
+window.URBAN_CONFIG = {
+  SUPABASE_URL: "",
+  SUPABASE_PUBLISHABLE_KEY: "",
+  API_BASE_URL: ""
+};

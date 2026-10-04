@@ -1,0 +1,15 @@
+{
+  "name": "urban-sneakerlab",
+  "version": "8.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "stripe": "^18.5.0"
+  },
+  "description": "URBAN.SNEAKERLAB ecommerce with Supabase and Stripe Checkout Sandbox"
+}
