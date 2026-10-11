@@ -182,7 +182,7 @@ function scrollToId(id){document.getElementById(id).scrollIntoView({behavior:'sm
 function openCheckout(){if(!cart.length)return toast('Adiciona pelo menos um produto ao carrinho.');closeCart();document.getElementById('checkoutSummary').innerHTML=cart.map(p=>`<div class="cartrow"><span>${p.brand} ${p.name}<br><small class="muted">Tam. ${p.size}</small></span><b>${euro(p.price)}</b></div>`).join('');document.getElementById('checkoutTotal').textContent=euro(cart.reduce((s,p)=>s+p.price,0));document.getElementById('checkout').classList.add('open')}
 function closeCheckout(){document.getElementById('checkout').classList.remove('open')}
 function finishOrder(){toast('Encomenda de demonstração criada ✓');cart=[];updateCart();setTimeout(closeCheckout,1000)}
-function quiz(style){let map={Streetwear:'Air Jordan 1 Retro High OG',Casual:"Air Force 1 ’07",Desportivo:'Air Max 1',Minimalista:'New Balance 550'};document.getElementById('q').textContent='A tua combinação: '+map[style];document.getElementById('answers').innerHTML='<button onclick="scrollToId(\\'tenis\\')">VER RECOMENDAÇÃO →</button>'}
+function quiz(style){let map={Streetwear:'Air Jordan 1 Retro High OG',Casual:"Air Force 1 ’07",Desportivo:'Air Max 1',Minimalista:'New Balance 550'};document.getElementById('q').textContent='A tua combinação: '+map[style];document.getElementById('answers').innerHTML="<button onclick=\"scrollToId('tenis')\">VER RECOMENDAÇÃO →</button>"}
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
 
 const ACCOUNT_KEY='usl_account_v1', ORDERS_KEY='usl_orders_v1';
