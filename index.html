@@ -69,7 +69,7 @@ input,select{background:#111!important;color:#fff!important;border:1px solid var
 
 <nav><div class="logo">URBAN.<i>SNEAKERLAB</i></div><div class="links"><a href="#inicio">Início</a><a href="#tenis">Tênis</a><a href="#marcas">Marcas</a><a href="#drops">Lançamentos</a><a href="#lab">SNEAKER LAB</a></div><input id="search" class="search" placeholder="Pesquisar tênis, marcas..."><div style="cursor:pointer" onclick="openAccount()">👤</div><div class="navcart" onclick="openCart()">🛒<sup id="count" class="badge">0</sup></div></nav>
 
-<section id="inicio" class="hero"><div><div class="eyebrow">URBAN.SNEAKERLAB</div><h1>STEP INTO <span>YOUR <em>WORLD.</em></span></h1><p>Tênis que combinam contigo. Estilo que não passa despercebido.</p><button class="btn" onclick="scrollToId('tenis')">SHOP NOW →</button> <button class="btn alt" onclick="scrollToId('drops')">EXPLORE DROPS</button></div></section>
+<section id="inicio" class="hero"><div><div class="eyebrow">URBAN.SNEAKERLAB</div><h1>STEP INTO <span>YOUR <em>WORLD.</em></span></h1><p>Tênis que combinam contigo. Estilo que não passa despercebido.</p><a class="btn" href="#tenis" onclick="scrollToId('tenis');return false;">SHOP NOW →</a> <a class="btn alt" href="#drops" onclick="scrollToId('drops');return false;">EXPLORE DROPS</a></div></section>
 
 <section id="marcas" class="section"><div class="brands"><div class="brand">NIKE</div><div class="brand">JORDAN</div><div class="brand">adidas</div><div class="brand">NEW BALANCE</div><div class="brand">PUMA</div><div class="brand">ASICS</div><div class="brand">VANS</div><div class="brand">CONVERSE</div></div></section>
 
@@ -341,6 +341,16 @@ if(typeof oldLoadProducts==='function'){
     window.__uslOriginalProducts=products;
   }
 }
+</script>
+
+<script>
+// Defensive startup cleanup: prevent a stale/invisible modal layer from blocking taps.
+window.addEventListener('load', function () {
+  const overlay = document.getElementById('overlay');
+  const productModal = document.getElementById('productModal');
+  if (overlay) overlay.classList.remove('open');
+  if (productModal) productModal.classList.remove('open');
+});
 </script>
 </body>
 </html>
